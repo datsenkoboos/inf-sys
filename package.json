@@ -1,14 +1,28 @@
 {
   "name": "inf-sys",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": ""
+    "prepare": "husky",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "check": "pnpm typecheck && pnpm lint",
+    "dev": "tsx src/index.ts --watch",
+    "test": "vitest"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "@types/node": "^22.7.0"
+    "@eslint/compat": "^1.1.1",
+    "@eslint/js": "^9.11.1",
+    "@stylistic/eslint-plugin": "^2.8.0",
+    "@tsconfig/node20": "^20.1.4",
+    "@types/node": "^22.7.0",
+    "eslint": "^9.11.1",
+    "globals": "^15.9.0",
+    "husky": "^9.1.6",
+    "nano-staged": "^0.8.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.0",
+    "typescript-eslint": "^8.7.0",
+    "vitest": "^2.1.1"
   }
 }
