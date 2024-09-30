@@ -1,8 +1,6 @@
 {
   "name": "inf-sys",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
     "prepare": "husky",
     "typecheck": "tsc --noEmit",
@@ -12,8 +10,6 @@
     "dev": "tsx src/index.ts --watch",
     "test": "vitest"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@eslint/compat": "^1.1.1",
     "@eslint/js": "^9.11.1",
