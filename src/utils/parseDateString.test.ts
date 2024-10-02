@@ -1,4 +1,4 @@
-import { parseDateString } from './parseDateString';
+import parseDateString from './parseDateString';
 import { describe, test, expect } from 'vitest';
 
 describe('parseDateString', () => {
