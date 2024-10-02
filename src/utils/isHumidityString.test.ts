@@ -11,7 +11,7 @@ describe('isHumidityString', () => {
       'g%',
       '1000%',
     ])('"%s"', (str) => {
-      expect(isHumidityString(str)).toBe(false);
+      expect(isHumidityString(str)).toBeFalsy();
     });
   });
 
@@ -21,7 +21,7 @@ describe('isHumidityString', () => {
       '10%',
       '100%',
     ])('"%s"', (str) => {
-      expect(isHumidityString(str)).toBe(true);
+      expect(isHumidityString(str)).toBeTruthy();
     });
   });
 });

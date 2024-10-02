@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import ts from 'typescript-eslint';
+import vitest from '@vitest/eslint-plugin';
 import stylistic from '@stylistic/eslint-plugin';
 
 import { includeIgnoreFile } from '@eslint/compat';
@@ -16,6 +17,23 @@ export default [
   js.configs.recommended,
   ...ts.configs.strict,
   ...ts.configs.stylistic,
+
+  {
+    ...vitest.configs.all,
+    files: ['**/*.{test,spec}.{ts,js}'],
+    rules: {
+      ...vitest.configs.all.rules,
+      'vitest/prefer-lowercase-title': ['warn', {
+        ignoreTopLevelDescribe: true,
+      }],
+      'vitest/no-hooks': 'off',
+      'vitest/consistent-test-it': ['warn', {
+        fn: 'test',
+        withinDescribe: 'test',
+      }],
+      'vitest/prefer-expect-assertions': 'off',
+    },
+  },
 
   stylistic.configs.customize({
     indent: 2,

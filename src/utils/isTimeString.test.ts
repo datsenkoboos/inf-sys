@@ -14,7 +14,7 @@ describe('isTimeString', () => {
       '100:10',
       '10:100',
     ])('"%s"', (str) => {
-      expect(isTimeString(str)).toBe(false);
+      expect(isTimeString(str)).toBeFalsy();
     });
   });
 
@@ -23,7 +23,7 @@ describe('isTimeString', () => {
       '10:10',
       '01:01',
     ])('"%s"', (str) => {
-      expect(isTimeString(str)).toBe(true);
+      expect(isTimeString(str)).toBeTruthy();
     });
   });
 });
