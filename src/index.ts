@@ -1,5 +1,5 @@
 import readline from 'node:readline';
-import { createTemperatureChangeInstance, parseInput } from './logic';
+import { createChangeInstance, parseInput } from './logic';
 
 function main() {
   const rl = readline.createInterface({
@@ -14,7 +14,7 @@ function main() {
     };
 
     const data = parseInput(input);
-    const instance = createTemperatureChangeInstance(data);
+    const instance = createChangeInstance(data);
     console.log('\n Instance created:', instance, '\n');
 
     handleConsoleIO();
