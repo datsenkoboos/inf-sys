@@ -17,10 +17,11 @@ export class TemperatureChange {
 }
 
 export interface ClimateChangeData extends TemperatureChangeData {
-  humidity?: number;
+  // VALUE%
+  humidity?: string;
 }
 export class ClimateChange extends TemperatureChange {
-  humidity?: number;
+  humidity?: string;
 
   constructor(data: ClimateChangeData) {
     super(data);
@@ -29,14 +30,13 @@ export class ClimateChange extends TemperatureChange {
 }
 
 export interface ExtendedClimateChangeData extends ClimateChangeData {
-  // "+-VALUE"
-  accuracy?: string;
+  time?: number;
 }
 export class ExtendedClimateChange extends ClimateChange {
-  accuracy?: string;
+  time?: number;
 
   constructor(data: ExtendedClimateChangeData) {
     super(data);
-    this.accuracy = data.accuracy;
+    this.time = data.time;
   }
 }
