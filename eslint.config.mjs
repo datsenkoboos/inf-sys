@@ -17,6 +17,11 @@ export default [
   js.configs.recommended,
   ...ts.configs.strict,
   ...ts.configs.stylistic,
+  {
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'warn',
+    },
+  },
 
   {
     ...vitest.configs.all,
@@ -48,4 +53,10 @@ export default [
       functions: 'only-multiline',
     },
   }),
+  {
+    rules: {
+      '@stylistic/no-trailing-spaces': 'warn',
+      '@stylistic/semi': 'warn',
+    },
+  },
 ];

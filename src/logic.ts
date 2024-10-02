@@ -6,21 +6,29 @@ type ModelData = TemperatureChangeData | ClimateChangeData | ExtendedClimateChan
 function parseMeasurements(measurements: string[]): ModelData {
   const data: ModelData = {};
 
-  measurements.forEach((measurement) => {
+  for (const measurement of measurements) {
     if (isDateString(measurement)) {
       data.date = parseDateString(measurement);
-    } else if (isTimeString(measurement)) {
+      continue;
+    }
+
+    if (isTimeString(measurement)) {
       (data as ExtendedClimateChangeData).time = parseTimeString(measurement);
-    } else if (measurement.includes('"')) {
-      if (isHumidityString(measurement.replaceAll('"', ''))) {
+      continue;
+    }
+
+    if (measurement.includes('"')) {
+      const actualValue = measurement.replaceAll('"', '');
+      if (isHumidityString(actualValue)) {
         (data as ClimateChangeData).humidity = measurement.replaceAll('"', '');
       } else {
         data.location = measurement.replaceAll('"', '');
       }
-    } else {
-      data.value = parseFloat(measurement);
+      continue;
     }
-  });
+
+    data.value = parseFloat(measurement);
+  }
 
   return data;
 }
