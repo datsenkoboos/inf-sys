@@ -23,7 +23,7 @@ function parseMeasurements(measurements: string[]): ModelData {
     } else if (isTimeString(measurement)) {
       (data as ExtendedClimateChangeData).time = parseTimeString(measurement);
     } else if (measurement.includes('"')) {
-      if (isHumidityString(measurement)) {
+      if (isHumidityString(measurement.replaceAll('"', ''))) {
         (data as ClimateChangeData).humidity = measurement.replaceAll('"', '');
       } else {
         data.location = measurement.replaceAll('"', '');
