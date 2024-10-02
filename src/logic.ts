@@ -1,18 +1,7 @@
-import { TemperatureChange, ExtendedClimateChangeData, ClimateChangeData, TemperatureChangeData, ClimateChange, ExtendedClimateChange } from './model';
-import { isDateString, isTimeString, isHumidityString } from './utils';
+import { TemperatureChange, type ExtendedClimateChangeData, type ClimateChangeData, type TemperatureChangeData, ClimateChange, ExtendedClimateChange } from './model';
+import { isDateString, isTimeString, isHumidityString, parseDateString, parseTimeString } from './utils';
 
 type ModelData = TemperatureChangeData | ClimateChangeData | ExtendedClimateChangeData;
-
-function parseDateString(dateString: string): Date {
-  const [year, month, day] = dateString.split('.').map(value => parseInt(value, 10));
-  return new Date(year, month - 1, day);
-}
-
-function parseTimeString(timeString: string): number {
-  const [hour, minute] = timeString.split(':').map(value => parseInt(value, 10));
-  const ms = (hour * 3600 + minute * 60) * 1000;
-  return ms;
-}
 
 function parseMeasurements(measurements: string[]): ModelData {
   const data: ModelData = {};
@@ -55,24 +44,24 @@ export function parseInput(input: string): TemperatureChange {
   return parseMeasurements(rawMeasurements);
 }
 
-function createTemperatureChangeInstance(data: TemperatureChangeData): TemperatureChange {
-  return new TemperatureChange(data);
+export function createModelInstance(data: ModelData) {
+  if ((data as ExtendedClimateChangeData).time) {
+    return createExtendedClimateChange(data);
+  }
+  if ((data as ExtendedClimateChangeData).humidity) {
+    return createClimateChange(data);
+  }
+  return createTemperatureChange(data);
 }
 
-function createClimateChangeInstance(data: ClimateChangeData): ClimateChange {
-  return new ClimateChange(data);
-}
-
-function createExtendedClimateChangeInstance(data: ExtendedClimateChangeData): ExtendedClimateChange {
+function createExtendedClimateChange(data: ExtendedClimateChangeData): ExtendedClimateChange {
   return new ExtendedClimateChange(data);
 }
 
-export function createChangeInstance(data: ModelData) {
-  if ((data as ExtendedClimateChangeData).time) {
-    return createExtendedClimateChangeInstance(data);
-  }
-  if ((data as ExtendedClimateChangeData).humidity) {
-    return createClimateChangeInstance(data);
-  }
-  return createTemperatureChangeInstance(data);
+function createClimateChange(data: ClimateChangeData): ClimateChange {
+  return new ClimateChange(data);
+}
+
+function createTemperatureChange(data: TemperatureChangeData): TemperatureChange {
+  return new TemperatureChange(data);
 }
