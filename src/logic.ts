@@ -29,6 +29,20 @@ export function parseInput(input: string): TemperatureChange {
   // date float
   // string float
   const rawMeasurements = input.split(' ').map(m => m.trim());
+
+  let splitLocationStartIndex: number | null = null;
+  for (let i = 0; i < rawMeasurements.length; i++) {
+    const measurement = rawMeasurements[i];
+    if (measurement.includes('"') && measurement.at(-1) !== '"') {
+      splitLocationStartIndex = i;
+      break;
+    }
+  }
+  if (splitLocationStartIndex !== null) {
+    const splitLocationEnd = rawMeasurements.splice(splitLocationStartIndex + 1, 1);
+    rawMeasurements[splitLocationStartIndex] = `${rawMeasurements[splitLocationStartIndex]} ${splitLocationEnd}`;
+  }
+
   return parseMeasurements(rawMeasurements);
 }
 
