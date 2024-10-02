@@ -1,4 +1,4 @@
-import TemperatureChange, { TemperatureChangeData } from './model';
+import { TemperatureChange, TemperatureChangeData } from './model';
 import { isDateString } from './utils';
 
 function parseDateString(dateString: string): Date {
