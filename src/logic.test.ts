@@ -74,7 +74,7 @@ describe('parseInputString', () => {
 });
 
 describe('createModelInstance', () => {
-  test('should create extended climate change if data.time is present', () => {
+  test('should create ExtendedClimateChange if data.time is present', () => {
     const data: ExtendedClimateChangeData = {
       date: parseDateString('2019.08.14'),
       location: 'Nizhniy Novgorod',
@@ -86,7 +86,7 @@ describe('createModelInstance', () => {
     expect(createModelInstance(data)).toStrictEqual(new ExtendedClimateChange(data));
   });
 
-  test('should create climate change if data.humidity is present and data.time is not', () => {
+  test('should create ClimateChange if data.humidity is present and data.time is not', () => {
     const data: ExtendedClimateChangeData = {
       date: parseDateString('2019.08.14'),
       location: 'Nizhniy Novgorod',
@@ -97,7 +97,7 @@ describe('createModelInstance', () => {
     expect(createModelInstance(data)).toStrictEqual(new ClimateChange(data));
   });
 
-  test('should create temperature change if data.humidity and data.time are not present', () => {
+  test('should create TemperatureChange if data.humidity and data.time are not present', () => {
     const data: ExtendedClimateChangeData = {
       date: parseDateString('2019.08.14'),
       location: 'Nizhniy Novgorod',
