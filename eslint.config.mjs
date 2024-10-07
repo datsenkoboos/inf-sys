@@ -56,6 +56,7 @@ export default [
   {
     rules: {
       '@stylistic/no-trailing-spaces': 'warn',
+      '@stylistic/no-multiple-empty-lines': 'warn',
       '@stylistic/semi': 'warn',
     },
   },
