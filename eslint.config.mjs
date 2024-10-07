@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import ts from 'typescript-eslint';
+import vitest from '@vitest/eslint-plugin';
 import stylistic from '@stylistic/eslint-plugin';
 
 import { includeIgnoreFile } from '@eslint/compat';
@@ -16,6 +17,28 @@ export default [
   js.configs.recommended,
   ...ts.configs.strict,
   ...ts.configs.stylistic,
+  {
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'warn',
+    },
+  },
+
+  {
+    ...vitest.configs.all,
+    files: ['**/*.{test,spec}.{ts,js}'],
+    rules: {
+      ...vitest.configs.all.rules,
+      'vitest/prefer-lowercase-title': ['warn', {
+        ignoreTopLevelDescribe: true,
+      }],
+      'vitest/no-hooks': 'off',
+      'vitest/consistent-test-it': ['warn', {
+        fn: 'test',
+        withinDescribe: 'test',
+      }],
+      'vitest/prefer-expect-assertions': 'off',
+    },
+  },
 
   stylistic.configs.customize({
     indent: 2,
@@ -30,4 +53,11 @@ export default [
       functions: 'only-multiline',
     },
   }),
+  {
+    rules: {
+      '@stylistic/no-trailing-spaces': 'warn',
+      '@stylistic/no-multiple-empty-lines': 'warn',
+      '@stylistic/semi': 'warn',
+    },
+  },
 ];
