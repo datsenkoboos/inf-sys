@@ -3,53 +3,53 @@ import { isDateString, isTimeString, isHumidityString, parseDateString, parseTim
 
 type ModelData = TemperatureChangeData | ClimateChangeData | ExtendedClimateChangeData;
 
-function parseMeasurements(measurements: string[]): ModelData {
+function parseProperties(properties: string[]): ModelData {
   const data: ModelData = {};
 
-  for (const measurement of measurements) {
-    if (isDateString(measurement)) {
-      data.date = parseDateString(measurement);
+  for (const property of properties) {
+    if (isDateString(property)) {
+      data.date = parseDateString(property);
       continue;
     }
 
-    if (isTimeString(measurement)) {
-      (data as ExtendedClimateChangeData).time = parseTimeString(measurement);
+    if (isTimeString(property)) {
+      (data as ExtendedClimateChangeData).time = parseTimeString(property);
       continue;
     }
 
-    if (measurement.includes('"')) {
-      const actualValue = measurement.replaceAll('"', '');
+    if (property.includes('"')) {
+      const actualValue = property.replaceAll('"', '');
       if (isHumidityString(actualValue)) {
-        (data as ClimateChangeData).humidity = measurement.replaceAll('"', '');
+        (data as ClimateChangeData).humidity = property.replaceAll('"', '');
       } else {
-        data.location = measurement.replaceAll('"', '');
+        data.location = property.replaceAll('"', '');
       }
       continue;
     }
 
-    data.value = parseFloat(measurement);
+    data.value = parseFloat(property);
   }
 
   return data;
 }
 
-export function parseInput(input: string): TemperatureChange {
-  const rawMeasurements = input.split(' ').map(m => m.trim());
+export function parseInputString(input: string): TemperatureChange {
+  const rawProperties = input.split(' ').map(m => m.trim());
 
   let splitLocationStartIndex: number | null = null;
-  for (let i = 0; i < rawMeasurements.length; i++) {
-    const measurement = rawMeasurements[i];
-    if (measurement.includes('"') && measurement.at(-1) !== '"') {
+  for (let i = 0; i < rawProperties.length; i++) {
+    const property = rawProperties[i];
+    if (property.includes('"') && property.at(-1) !== '"') {
       splitLocationStartIndex = i;
       break;
     }
   }
   if (splitLocationStartIndex !== null) {
-    const splitLocationEnd = rawMeasurements.splice(splitLocationStartIndex + 1, 1);
-    rawMeasurements[splitLocationStartIndex] = `${rawMeasurements[splitLocationStartIndex]} ${splitLocationEnd}`;
+    const splitLocationEnd = rawProperties.splice(splitLocationStartIndex + 1, 1);
+    rawProperties[splitLocationStartIndex] = `${rawProperties[splitLocationStartIndex]} ${splitLocationEnd}`;
   }
 
-  return parseMeasurements(rawMeasurements);
+  return parseProperties(rawProperties);
 }
 
 export function createModelInstance(data: ModelData) {
