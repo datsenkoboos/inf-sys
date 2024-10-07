@@ -3,6 +3,10 @@ import { isDateString, isTimeString, isHumidityString, parseDateString, parseTim
 
 type ModelData = TemperatureChangeData | ClimateChangeData | ExtendedClimateChangeData;
 
+function throwInvalidInputError() {
+  throw new Error('Invalid input');
+}
+
 function parseProperties(properties: string[]): ModelData {
   const data: ModelData = {};
 
@@ -17,37 +21,32 @@ function parseProperties(properties: string[]): ModelData {
       continue;
     }
 
-    if (property.includes('"')) {
+    if (property.startsWith('"') && property.endsWith('"')) {
       const actualValue = property.replaceAll('"', '');
+      if (!actualValue) throwInvalidInputError();
+
       if (isHumidityString(actualValue)) {
-        (data as ClimateChangeData).humidity = property.replaceAll('"', '');
+        (data as ClimateChangeData).humidity = actualValue;
       } else {
-        data.location = property.replaceAll('"', '');
+        data.location = actualValue;
       }
+
       continue;
     }
 
-    data.value = parseFloat(property);
+    const value = Number(property);
+    if (isNaN(value)) throwInvalidInputError();
+    else {
+      data.value = value;
+    }
   }
 
   return data;
 }
 
 export function parseInputString(input: string): TemperatureChange {
-  const rawProperties = input.split(' ').map(m => m.trim());
-
-  let splitLocationStartIndex: number | null = null;
-  for (let i = 0; i < rawProperties.length; i++) {
-    const property = rawProperties[i];
-    if (property.includes('"') && property.at(-1) !== '"') {
-      splitLocationStartIndex = i;
-      break;
-    }
-  }
-  if (splitLocationStartIndex !== null) {
-    const splitLocationEnd = rawProperties.splice(splitLocationStartIndex + 1, 1);
-    rawProperties[splitLocationStartIndex] = `${rawProperties[splitLocationStartIndex]} ${splitLocationEnd}`;
-  }
+  const rawProperties = input.split('  ').map(m => m.trim()).filter(Boolean);
+  if (rawProperties.length === 0) throwInvalidInputError();
 
   return parseProperties(rawProperties);
 }

@@ -1,29 +1,49 @@
 import readline from 'readline';
-import fs from 'fs';
+import fs from 'fs/promises';
 import { createModelInstance, parseInputString } from './logic';
 
 function handleCreateInstance(input: string) {
-  const data = parseInputString(input);
-  const instance = createModelInstance(data);
-  console.log('\n Instance created:', instance);
+  try {
+    const data = parseInputString(input);
+    const instance = createModelInstance(data);
+    console.log('\nInstance created:', instance);
+  } catch (e) {
+    const error = e as Error;
+    logError(error.message);
+  }
 }
 
-function handleFileInput(input: string) {
-  const filePath = input.slice(5);
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
+function logError(text: string) {
+  console.log(`\nERROR: ${text}\n`);
+}
 
+async function handleFileInput(input: string) {
+  const filePath = input.slice(4).trim();
+  try {
+    const data = await fs.readFile(filePath, 'utf8');
     const objectInputs = data.split('\n').map(input => input.trim()).filter(Boolean);
-    objectInputs.forEach(handleCreateInstance);
-  });
+    if (objectInputs.length === 0) {
+      logError('Empty file');
+    } else {
+      objectInputs.forEach(handleCreateInstance);
+    }
+  } catch (e) {
+    const error = e as NodeJS.ErrnoException;
+    if (error.code === 'ENOENT') {
+      logError('File was not found');
+    } else {
+      logError(error.message);
+    }
+  }
 }
 
 function handleMultiObjectInput(input: string) {
   const objectInputs = input.split(';').map(properties => properties.trim()).filter(Boolean);
-  objectInputs.forEach(handleCreateInstance);
+  if (objectInputs.length === 0) {
+    logError('Invalid input');
+  } else {
+    objectInputs.forEach(handleCreateInstance);
+  }
 }
 
 function main() {
@@ -37,14 +57,14 @@ function main() {
     console.log('Type "File FILEPATH" to read object properties from a file ');
     console.log('Type "\\q" to exit');
 
-    rl.question('\n', (input: string) => {
+    rl.question('\n', async (input: string) => {
       if (input === '\\q') {
         rl.close();
         return;
       };
 
-      if (input.slice(0, 4) === 'File') {
-        handleFileInput(input);
+      if (input.slice(0, 4).toLowerCase() === 'file') {
+        await handleFileInput(input);
       } else if (input.includes(';')) {
         handleMultiObjectInput(input);
       } else {
