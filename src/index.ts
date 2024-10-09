@@ -23,10 +23,10 @@ async function handleFileInput(input: string) {
     const data = await fs.readFile(filePath, 'utf8');
     const objectInputs = data.split('\n').map(input => input.trim()).filter(Boolean);
     if (objectInputs.length === 0) {
-      logError('Empty file');
-    } else {
-      objectInputs.forEach(handleCreateInstance);
+      throw new Error('Empty file');
     }
+
+    objectInputs.forEach(handleCreateInstance);
   } catch (e) {
     const error = e as NodeJS.ErrnoException;
     if (error.code === 'ENOENT') {
@@ -53,7 +53,7 @@ function main() {
   });
 
   function handleConsoleIO() {
-    console.log('Type object properties to create an instance, with set of properties of each object separated with ";"');
+    console.log('\nType object properties to create an instance, with set of properties of each object separated with ";"');
     console.log('Type "File FILEPATH" to read object properties from a file ');
     console.log('Type "\\q" to exit');
 
